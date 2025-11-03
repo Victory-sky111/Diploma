@@ -21,6 +21,6 @@ def logged_in_driver(driver):
     """Авторизация перед тестами"""
     page = Autorization(driver)
     page.click()
-    page.login("test.tst320@skyeng.ru", "pr4VmfgHsi")
+    page.login("эл_почта", "пароль")
     page.click_schedule()
     return driver
