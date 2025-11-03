@@ -38,4 +38,5 @@ def test_create_event_without_title(logged_in_driver):
 def test_event_colors(logged_in_driver):
     page = SchedulePage(logged_in_driver)
     count = page.count_colors()
-    assert count >= 4
+    print(f"Количество доступных цветов: {count}")
+    assert count == 4, f"Ожидалось 4 цвета, фактически {count}"

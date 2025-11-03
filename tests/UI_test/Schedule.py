@@ -39,18 +39,18 @@ class SchedulePage:
             By.XPATH, "//div[normalize-space(text())='Cохранить']").click()
         self.wait.until(EC.text_to_be_present_in_element(
             (By.XPATH, f"//div[contains(@class,'long-view__title')"
-             f"and normalize-space(text())={title}]"), title))
+             f"and text()='{title}'][last()]"), title))
 
     @allure.step("Изменение даты личного события")
-    def change_event_date(self, title, new_date="1 ноября"):
+    def change_event_date(self, title, new_date="6 ноября"):
         self.open()
         event = self.wait.until(EC.element_to_be_clickable(
             (By.XPATH, f"//div[contains(@class,'long-view__title')"
-             f"and normalize-space(text())={title}]")))
+             f"and text()='{title}'][last()]")))
         event.click()
 
         date_dropdown = self.wait.until(EC.element_to_be_clickable(
-            (By.XPATH, "//div[normalize-space(text())='Редактировать']")))
+            (By.XPATH, "//div[text()=' Редактировать ']")))
         date_dropdown.click()
         option = self.wait.until(EC.element_to_be_clickable(
             (By.XPATH, f"//select[contains(@class,'class-date')]/"
@@ -61,22 +61,20 @@ class SchedulePage:
             By.XPATH, "//div[normalize-space(text())='Cохранить']").click()
         self.wait.until(EC.text_to_be_present_in_element(
             (By.XPATH, f"//div[contains(@class,'long-view__title')"
-             f"and normalize-space(text())={title}]"), title))
+             f"and text()='{title}'][last()]"), title))
 
     @allure.step("Удаление личного события")
     def delete_event(self, title):
         self.open()
         event = self.wait.until(EC.element_to_be_clickable(
             (By.XPATH, f"//div[contains(@class,'long-view__title')"
-             f"and normalize-space(text())={title}]")))
+             f"and text()='{title}'][last()]")))
         event.click()
 
         delete_evt = self.wait.until(EC.element_to_be_clickable(
             (By.XPATH, f"//div[contains(@class,'text-container')"
              f"and normalize-space(text())='Удалить']")))
         delete_evt.click()
-
-        # self.wait.until_not(EC.text_to_be_present_in_element((By.TAG_NAME, "body"), title))
 
     @allure.step("Создание личного события без названия")
     def try_save_empty_event(self):
@@ -86,18 +84,22 @@ class SchedulePage:
         self.wait.until(EC.element_to_be_clickable(
             (By.XPATH, "//span[contains(@class,'text-center') and normalize-space(text())='Личное событие']"))).click()
 
-        save_button = self.driver.find_element(
-            By.XPATH, "//div[normalize-space(text())='Cохранить']").click()
+        save_button = self.wait.until(EC.presence_of_element_located(
+            (By.XPATH, "//div[text()=' Cохранить ']")))
         if not save_button.is_enabled():
             return "disabled"
+        else:
+            save_button.click()
+            return "enabled"
 
     @allure.step("Проверка наличия цветов при создании события")
     def count_colors(self):
         self.open()
         self.wait.until(EC.element_to_be_clickable(
-            (By.CSS_SELECTOR, "button[aria-label='Создать событие']"))).click()
+            (By.CSS_SELECTOR, "ds-icon[name='add']"))).click()
         self.wait.until(EC.element_to_be_clickable(
-            (By.XPATH, "//button[contains(text(),'Личное событие')]"))).click()
+            (By.XPATH,
+             "//span[contains(@class,'text-center') and normalize-space(text()) = 'Личное событие']"))).click()
         colors = self.wait.until(EC.presence_of_all_elements_located(
-            (By.XPATH, "//path[starts-with(@d, 'M12 24c6.627')]")))
+            (By.XPATH, "//div[contains(@class, 'color-circle')]")))
         return len(colors)
