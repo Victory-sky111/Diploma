@@ -1,0 +1,16 @@
+# Виртуальное окружение
+.venv/
+
+# Pytest cache
+.pytest_cache/
+
+# Allure отчёты
+allure-report/
+
+# Настройки VS Code
+.vscode/
+
+# Кеши и прочее
+__pycache__/
+*.py[cod]
+*.log
